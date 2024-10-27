@@ -1,0 +1,57 @@
+version: "3.1"
+rules:
+  - rule: Greet user
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  # - rule: Thank you
+  #   steps:
+  #     - intent: thankyou
+  #     - action: utter_noworries
+
+  # - rule: Bot challenge
+  #   steps:
+  #     - intent: bot_challenge
+  #     - action: utter_iamabot
+
+  # - rule: Chitchat
+  #   steps:
+  #     - intent: chitchat
+  #     - action: utter_chitchat
+
+  - rule: User wants to create a business
+    steps:
+      - intent: create_business
+      - action: create_business_form
+      - active_loop: create_business_form
+
+  # - rule: activate restaurant form
+  #   steps:
+  #     - intent: request_restaurant
+  #     - action: restaurant_formc
+  #     - active_loop: restaurant_formc
+
+  - rule: submit form
+    condition:
+    - active_loop: create_business_form
+    steps:
+      - action: create_business_form
+      - active_loop: null
+      - action: utter_confirm_info
+  # - rule: User finishes interaction
+  #   steps:
+  #     - active_loop: create_business_form
+  #     - intent: finish_interaction
+  #     - action: utter_confirm_info
+  #     - active_loop: null
+
+  - rule: Ask anything else after finishing interaction
+    steps:
+      - intent: validate_info
+      - action: utter_thank_you
+
+  - rule: Finish interaction
+    steps:
+      - intent: finish_interaction
+      - action: utter_ask_feedback

@@ -1,0 +1,13 @@
+fastapi==0.108.0
+whatsapp-python==3.0.5
+supabase==2.3.5
+aioredis
+pymemcache
+jsonpath_ng
+uncurl
+langchain
+langchain-community
+chromadb
+jq
+sentence_transformers
+langchain-openai

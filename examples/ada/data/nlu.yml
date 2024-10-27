@@ -1,0 +1,101 @@
+version: "3.1"
+nlu:
+- intent: greet
+  examples: |
+    - Bonjour
+    - Salut
+    - Hello
+    - Hi
+
+- intent: create_business
+  examples: |
+    - Créer une entreprise
+    - Je veux créer une entreprise
+    - Startup
+    - Lancer une société
+
+- intent: specify_nationality
+  examples: |
+    - Togolais
+    - Étranger
+    - Je suis togolais
+    - Je ne suis pas togolais
+
+- intent: choose_business_structure
+  examples: |
+    - Entreprise Individuelle
+    - Société
+
+- intent: choose_business_form
+  examples: |
+    - SARL
+    - SAS
+    - Autre
+    
+- intent: provide_personal_info
+  examples: |
+    - Mon nom est [John Doe](name)
+    - Je m'appelle [Jane Dick](name)
+    - [Le Salon de Marie SARL](name)
+    - [Head Corporation](name)
+    - [Head Corporation SARL](name)
+    - Mon nom est [Ama Kwatcha](name)
+    - [Nevilles Dick](name)
+    - [Amah Kwatcha](name)
+    - Voici mon adresse e-mail : [johndoe@gmail.com](email)
+    - [johndoe@yahoo.com](email)
+    - C'est [marierose@gmail.com](email)
+    - Mon numéro de téléphone est [97261545](phone)
+    - C'est le [97262082](phone)
+    - [97262082](phone)
+    - [+22897262082](phone)
+    - [0022897262082](phone)
+
+- intent: confirm_info
+  examples: |
+    - Valider
+    - C'est bon
+    - Oui
+    - confirmer
+
+- intent: validate_info
+  examples: |
+    - Valider
+    - C'est correct
+    - Oui
+    - c'est ça
+
+- intent: anything_else
+  examples: |
+    - Non
+    - c'est tout
+    - Rien d'autre
+    - Non merci
+
+- intent: feedback
+  examples: |
+    - 5
+    - 4
+    - 3
+    - 2
+    - 1
+
+- intent: confirm_done
+  examples: |
+    - Terminer
+    - Oui
+    - finir
+    - C'est tout pour moi
+
+- intent: modify_info
+  examples: |
+    - Modifier
+    - Changer
+    - Rectifier
+    - Editer
+
+- intent: finish_interaction
+  examples: |
+    - Finir l'interaction
+    - Terminer la conversation
+    - Quitter

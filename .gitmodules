@@ -1,0 +1,3 @@
+[submodule "rasa"]
+	path = rasa
+	url = https://github.com/Wingrammer/kauza-dialogue.git

@@ -1,0 +1,22 @@
+profile: af505b53-523b-4188-8cfa-6d767ee60283
+recipe: default.v1
+language: fr
+assistant_id: 20240219-025211-concave-skunk
+models: []
+training_message: Failed when parsing body as json
+pipeline:
+- name: WhitespaceTokenizer
+- name: LexicalSyntacticFeaturizer
+- name: CountVectorsFeaturizer
+  token_pattern: (?u)\b\w+\b
+- name: DucklingEntityExtractor
+  url: http://localhost:8000
+  dimensions:
+  - number
+- name: kauza_plus.ml.LLMIntentClassifier
+- name: EntitySynonymMapper
+policies:
+- name: TEDPolicy
+  epochs: 1
+- name: AugmentedMemoizationPolicy
+- name: RulePolicy

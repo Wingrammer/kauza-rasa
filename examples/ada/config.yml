@@ -1,0 +1,22 @@
+recipe: default.v1
+assistant_id: form_bot
+language: fr
+
+pipeline:
+  - name: WhitespaceTokenizer
+  - name: LexicalSyntacticFeaturizer
+  - name: CountVectorsFeaturizer
+    token_pattern: (?u)\b\w+\b
+  - name: DucklingEntityExtractor
+    url: http://localhost:8000
+    dimensions: ["number"]
+  - name: DIETClassifier
+    epochs: 1000
+    # run_eagerly: True
+  - name: EntitySynonymMapper
+
+policies:
+  - name: TEDPolicy
+    epochs: 1000
+  - name: AugmentedMemoizationPolicy
+  - name: RulePolicy
