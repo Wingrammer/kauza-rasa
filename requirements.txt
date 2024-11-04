@@ -1,5 +1,5 @@
 fastapi==0.108.0
-whatsapp-python==3.0.5
+whatsapp-python==4.0.2
 supabase==2.3.5
 aioredis
 pymemcache
