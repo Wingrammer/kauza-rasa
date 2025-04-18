@@ -1,13 +1,15 @@
 fastapi==0.108.0
-whatsapp-python==3.0.5
-supabase==2.3.5
+whatsapp-python==4.0.2
+# supabase==2.3.5
 aioredis
 pymemcache
 jsonpath_ng
 uncurl
-langchain
-langchain-community
-chromadb
-jq
-sentence_transformers
-langchain-openai
+pymongocrypt
+typing_extensions==4.12.2
+# langchain
+# langchain-community
+# chromadb
+# jq
+# sentence_transformers
+# langchain-openai

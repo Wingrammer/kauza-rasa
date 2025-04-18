@@ -11,13 +11,35 @@ COPY . /build/
 WORKDIR /build
 
 # install dependencies
-RUN python -m venv /opt/venv && \
-  . /opt/venv/bin/activate && \
-  pip install --no-cache-dir -U "pip==22.*" -U "wheel>0.38.0" && \
-  poetry install --no-dev --no-root --no-interaction && \
-  poetry build -f wheel -n && \
-  pip install --no-deps dist/*.whl && \
-  rm -rf dist *.egg-info
+# RUN python -m venv /opt/venv && \
+#   . /opt/venv/bin/activate && \
+#   pip install --no-cache-dir -U "pip==22.*" -U "wheel>0.38.0" && \
+#   poetry install --no-dev --no-root --no-interaction && \
+#   pip install -r requirements.txt&& \
+#   poetry build -f wheel -n && \
+#   pip install --no-deps dist/*.whl && \
+#   rm -rf dist *.egg-info
+
+RUN python -m venv /opt/venv \
+  && . /opt/venv/bin/activate \
+  && pip install --no-cache-dir -U "pip==22.*" \
+  && pip install --no-cache-dir -U "wheel>0.38.0"
+
+# Separate poetry install
+RUN . /opt/venv/bin/activate \
+  && poetry install --only main --no-root --no-interaction
+
+# Check if requirements.txt install is necessary
+RUN . /opt/venv/bin/activate \
+  && pip install -r requirements.txt
+
+# Build wheel file with poetry and install it
+RUN . /opt/venv/bin/activate \
+  && poetry build -f wheel -n \
+  && pip install --no-deps dist/*.whl \
+  && rm -rf dist *.egg-info
+
+
 
 # start a new build stage
 FROM ${IMAGE_BASE_NAME}:base-${BASE_IMAGE_HASH} as runner
