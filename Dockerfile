@@ -39,9 +39,13 @@ RUN . /opt/venv/bin/activate \
 #   && pip install --no-deps dist/*.whl \
 #   && rm -rf dist *.egg-info
 
-RUN . /opt/venv/bin/activate && poetry build -f wheel -n
-RUN . /opt/venv/bin/activate && pip install --no-deps dist/*.whl
-RUN rm -rf dist *.egg-info
+# RUN . /opt/venv/bin/activate && poetry build -f wheel -n
+# RUN . /opt/venv/bin/activate && pip install --no-deps dist/*.whl
+# RUN rm -rf dist *.egg-info
+
+RUN /opt/venv/bin/poetry build -f wheel -n \
+    && /opt/venv/bin/pip install --no-deps dist/*.whl \
+    && rm -rf dist *.egg-info
 
 
 
