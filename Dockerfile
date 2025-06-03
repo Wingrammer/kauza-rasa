@@ -34,10 +34,14 @@ RUN . /opt/venv/bin/activate \
   && pip install -r requirements.txt
 
 # Build wheel file with poetry and install it
-RUN . /opt/venv/bin/activate \
-  && poetry build -f wheel -n \
-  && pip install --no-deps dist/*.whl \
-  && rm -rf dist *.egg-info
+# RUN . /opt/venv/bin/activate \
+#   && poetry build -f wheel -n \
+#   && pip install --no-deps dist/*.whl \
+#   && rm -rf dist *.egg-info
+
+RUN . /opt/venv/bin/activate && poetry build -f wheel -n
+RUN . /opt/venv/bin/activate && pip install --no-deps dist/*.whl
+RUN rm -rf dist *.egg-info
 
 
 
