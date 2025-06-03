@@ -32,4 +32,4 @@ jobs:
           build-args: |
             IMAGE_BASE_NAME=wingrammer/kauza
             BASE_IMAGE_HASH=latest
-            BASE_BUILDER_IMAGE_HASH=poetry-1.8.4
+            BASE_BUILDER_IMAGE_HASH=latest-poetry-1.8.4
