@@ -25,6 +25,10 @@ RUN python -m venv /opt/venv \
   && pip install --no-cache-dir -U "pip==22.*" \
   && pip install --no-cache-dir -U "wheel>0.38.0"
 
+# Install poetry (corr!)
+RUN curl -sSL https://install.python-poetry.org | python3 - \
+  && ln -s /root/.local/bin/poetry /opt/venv/bin/poetry
+
 # Separate poetry install
 RUN . /opt/venv/bin/activate \
   && poetry install --only main --no-root --no-interaction
