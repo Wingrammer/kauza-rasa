@@ -58,7 +58,7 @@ RUN /opt/venv/bin/poetry build -f wheel -n \
 
 # add second args
 ARG IMAGE_BASE_NAME=wingrammer/kauza
-ARG BASE_IMAGE_HASH
+ARG BASE_IMAGE_HASH=latest
 
 # start a new build stage
 FROM ${IMAGE_BASE_NAME}:base-${BASE_IMAGE_HASH} as runner

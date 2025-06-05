@@ -1,5 +1,5 @@
 # The base builder image used for all images
-ARG IMAGE_BASE_NAME
+# ARG IMAGE_BASE_NAME
 # ARG POETRY_VERSION
 
 ARG IMAGE_BASE_NAME=wingrammer/kauza
