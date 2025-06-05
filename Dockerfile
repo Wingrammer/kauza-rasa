@@ -6,9 +6,9 @@
 # add argument
 ARG IMAGE_BASE_NAME=wingrammer/kauza
 ARG BASE_BUILDER_IMAGE_HASH=latest-poetry-1.8.4
-ARG BASE_IMAGE_HASH=latest
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
+
 # copy files
 COPY . /build/
 
@@ -56,7 +56,9 @@ RUN /opt/venv/bin/poetry build -f wheel -n \
     && /opt/venv/bin/pip install --no-deps dist/*.whl \
     && rm -rf dist *.egg-info
 
-
+# add second args
+ARG IMAGE_BASE_NAME=wingrammer/kauza
+ARG BASE_IMAGE_HASH=latest
 
 # start a new build stage
 FROM ${IMAGE_BASE_NAME}:base-${BASE_IMAGE_HASH} as runner
