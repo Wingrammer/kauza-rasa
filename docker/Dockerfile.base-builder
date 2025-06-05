@@ -1,6 +1,9 @@
 # The base builder image used for all images
 ARG IMAGE_BASE_NAME
-ARG POETRY_VERSION
+# ARG POETRY_VERSION
+
+ARG IMAGE_BASE_NAME=wingrammer/kauza
+ARG POETRY_VERSION=1.8.4  
 
 FROM ${IMAGE_BASE_NAME}:base-poetry-${POETRY_VERSION}
 
