@@ -1,7 +1,12 @@
 # The default Docker image
-ARG IMAGE_BASE_NAME
-ARG BASE_IMAGE_HASH
-ARG BASE_BUILDER_IMAGE_HASH
+# ARG IMAGE_BASE_NAME
+# ARG BASE_IMAGE_HASH
+# ARG BASE_BUILDER_IMAGE_HASH
+
+# add argument
+ARG IMAGE_BASE_NAME=wingrammer/kauza
+ARG BASE_BUILDER_IMAGE_HASH=latest-poetry-1.8.4
+ARG BASE_IMAGE_HASH=latest
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 # copy files
@@ -24,6 +29,10 @@ RUN python -m venv /opt/venv \
   && . /opt/venv/bin/activate \
   && pip install --no-cache-dir -U "pip==22.*" \
   && pip install --no-cache-dir -U "wheel>0.38.0"
+
+# Install poetry (corr!)
+RUN curl -sSL https://install.python-poetry.org | python3 - \
+  && ln -s /root/.local/bin/poetry /opt/venv/bin/poetry
 
 # Separate poetry install
 RUN . /opt/venv/bin/activate \
