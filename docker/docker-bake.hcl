@@ -3,19 +3,19 @@ variable "IMAGE_NAME" {
 }
 
 variable "IMAGE_TAG" {
-  default = "localdev"
+  default = "latest"
 }
 
 variable "BASE_IMAGE_HASH" {
-  default = "localdev"
+  default = "latest"
 }
 
 variable "BASE_MITIE_IMAGE_HASH" {
-  default = "localdev"
+  default = "latest"
 }
 
 variable "BASE_BUILDER_IMAGE_HASH" {
-  default = "localdev"
+  default = "latest"
 }
 
 # keep this in sync with the version in .github/poetry_version.txt

@@ -28,9 +28,10 @@ jobs:
           context: .
           file: Dockerfile.base-poetry
           push: true
-          tags: wingrammer/kauza:base-builder-latest-poetry-1.8.4
+          tags: wingrammer/kauza:base-latest
           build-args: |
             POETRY_VERSION=1.8.4
+      
 
       - name: Build and push main application image
         uses: docker/build-push-action@v5
