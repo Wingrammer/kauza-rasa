@@ -6,21 +6,23 @@ ARG GITHUB_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
-# 1. Install Git et delete
+# Installer git
 RUN apt-get update && \
     apt-get install -y git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 2. Configuration Git sécurisée
+# Config git 
 RUN git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
-# 3. Clonage du dépôt principal
-RUN git clone https://${GITHUB_TOKEN}:x-oauth-basic@github.com/TON_ORG/TON_REPO.git /build \
-  && cd /build \
-  && git submodule sync --recursive \
-  && git submodule update --init --recursive --depth=1
+# Cloner le dépôt principal avec ses sous-modules
+ARG GITHUB_ORG=Wingrammer
+ARG GITHUB_REPO=kauza-dialogue
 
+RUN git clone --recursive https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${GITHUB_ORG}/${GITHUB_REPO}.git /build && \
+    cd /build && \
+    git submodule sync --recursive && \
+    git submodule update --init --recursive --depth=1
 
 WORKDIR /build
 
