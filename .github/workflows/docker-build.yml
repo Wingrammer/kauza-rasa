@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: Build and Push Docker Image
 
 on:
   push:
@@ -22,17 +22,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push base-poetry image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: Dockerfile.base-poetry
-          push: true
-          tags: wingrammer/kauza:base-builder-latest-poetry-1.8.4
-          build-args: |
-            POETRY_VERSION=1.8.4
-
-      - name: Build and push main application image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -41,5 +31,5 @@ jobs:
           tags: wingrammer/kauza:latest
           build-args: |
             IMAGE_BASE_NAME=wingrammer/kauza
-            BASE_IMAGE_HASH=poetry-1.8.4
-            BASE_BUILDER_IMAGE_HASH=poetry-1.8.4
+            BASE_IMAGE_HASH=latest
+            BASE_BUILDER_IMAGE_HASH=latest-poetry-1.8.4
