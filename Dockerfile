@@ -4,12 +4,15 @@ ARG BASE_IMAGE_HASH
 ARG BASE_BUILDER_IMAGE_HASH
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
-# copy files
-COPY . /build/
 
-# change working directory
+# copy files
+# Copy all files including .git (need to be in build context)
+COPY . /build/
+COPY .git /build/.git
+
 WORKDIR /build
 
+# Initialize submodules
 RUN git submodule update --init --recursive
 
 # install dependencies
