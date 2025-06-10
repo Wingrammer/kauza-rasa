@@ -6,27 +6,39 @@ ARG KAUZA_DIALOG_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
-# Installer git
-RUN apt-get update && \
-    apt-get install -y git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# 1. Installation de Git
+RUN apt-get update && apt-get install -y git
 
-# Config git 
-RUN git config --global url."https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com".insteadOf "https://github.com" && \
-    git config --global advice.detachedHead false
+# 2. Configuration sécurisée de Git
+RUN git config --global url."https://api:${KAUZA_DIALOG_TOKEN}@github.com/".insteadOf "https://github.com/"
 
-# Cloner le dépôt principal avec ses sous-modules
+# 3. Commande de clonage corrigée
 RUN git clone --depth 1 --recurse-submodules \
-    https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build || \
-    { echo "Échec du clonage principal"; exit 1; }
+    https://api:${KAUZA_DIALOG_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build
 
 WORKDIR /build
 
-# init submodule
-RUN git submodule sync && \
-    git submodule update --init --recursive --depth=1 || \
-    { echo "Échec des sous-modules"; git submodule status; exit 1; }
+# # Installer git
+# RUN apt-get update && \
+#     apt-get install -y git && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/*
+
+# # Config git 
+# RUN git config --global url."https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com".insteadOf "https://github.com" && \
+#     git config --global advice.detachedHead false
+
+# # Cloner le dépôt principal avec ses sous-modules
+# RUN git clone --depth 1 --recurse-submodules \
+#     https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build || \
+#     { echo "Échec du clonage principal"; exit 1; }
+
+# WORKDIR /build
+
+# # init submodule
+# RUN git submodule sync && \
+#     git submodule update --init --recursive --depth=1 || \
+#     { echo "Échec des sous-modules"; git submodule status; exit 1; }
 
 # Initialise submodules if needed
 # RUN git submodule update --init --recursive
