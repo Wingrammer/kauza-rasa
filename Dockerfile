@@ -2,18 +2,32 @@
 ARG IMAGE_BASE_NAME
 ARG BASE_IMAGE_HASH
 ARG BASE_BUILDER_IMAGE_HASH
-ARG DOCKERHUB_TOKEN
+ARG GITHUB_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
-# # Auth GitHub private modules
-# RUN git config --global url."https://${DOCKERHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+# # # Auth GitHub private modules
+# # RUN git config --global url."https://${DOCKERHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
 
 
-RUN git clone https://${DOCKERHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build \
-  && cd /build \
-  && git submodule update --init --recursive
+# RUN git clone https://${DOCKERHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build \
+#   && cd /build \
+#   && git submodule update --init --recursive
 
+# 1. Install Git 
+RUN apt-get update && apt-get install -y git
+
+# 2. Cloner principal repo with authe
+RUN git clone https://${GITHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build \
+    && cd /build
+
+# 3. Corr submodule
+WORKDIR /build
+RUN git config --global credential.helper store \
+    && echo "https://${GITHUB_TOKEN}:x-oauth-basic@github.com" > ~/.git-credentials \
+    && git submodule sync \
+    && git submodule update --init --recursive \
+    && rm -rf ~/.git-credentials  # Nettoyage des credentials
 
 # Copy codebase (including submodules)
 COPY . /build/
