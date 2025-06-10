@@ -6,15 +6,21 @@ ARG DOCKERHUB_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
-# Auth GitHub private modules
-RUN git config --global url."https://${DOCKERHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+# # Auth GitHub private modules
+# RUN git config --global url."https://${DOCKERHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+
+
+RUN git clone https://${DOCKERHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build \
+  && cd /build \
+  && git submodule update --init --recursive
+
 
 # Copy codebase (including submodules)
 COPY . /build/
 WORKDIR /build
 
 # Initialise submodules if needed
-RUN git submodule update --init --recursive
+# RUN git submodule update --init --recursive
 
 # install dependencies
 # RUN python -m venv /opt/venv && \
