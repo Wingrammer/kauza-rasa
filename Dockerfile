@@ -13,12 +13,14 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # 2. Configuration Git sécurisée
-RUN git config --global credential.helper 'cache --timeout=120' && \
-    git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+RUN git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
 # 3. Clonage du dépôt principal
-RUN git clone --recursive https://${GITHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build || \
-    (cd /build && git submodule sync && git submodule update --init --recursive --force)
+RUN git clone https://${GITHUB_TOKEN}:x-oauth-basic@github.com/TON_ORG/TON_REPO.git /build \
+  && cd /build \
+  && git submodule sync --recursive \
+  && git submodule update --init --recursive --depth=1
+
 
 WORKDIR /build
 
