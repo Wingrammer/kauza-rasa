@@ -6,19 +6,21 @@ ARG GITHUB_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
-# 1. Install Git
-RUN apt-get update && apt-get install -y git
+# 1. Install Git et delete
+RUN apt-get update && \
+    apt-get install -y git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# 2. Config Git auth
-RUN git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+# 2. Configuration Git sécurisée
+RUN git config --global credential.helper 'cache --timeout=120' && \
+    git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
-# 3. Clone principal credential
-RUN git clone https://${GITHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build
+# 3. Clonage du dépôt principal
+RUN git clone --recursive https://${GITHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build || \
+    (cd /build && git submodule sync && git submodule update --init --recursive --force)
+
 WORKDIR /build
-
-# 4. Forcer la mise à jour des sous-modules
-RUN git submodule sync && \
-    git submodule update --init --recursive --force
 
 # Initialise submodules if needed
 # RUN git submodule update --init --recursive
