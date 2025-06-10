@@ -14,20 +14,16 @@ FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 #   && cd /build \
 #   && git submodule update --init --recursive
 
-# 1. Install Git 
+# 1. Install Git
 RUN apt-get update && apt-get install -y git
 
-# 2. Cloner principal repo with authe
-RUN git clone https://${GITHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build \
-    && cd /build
+# 2. Config Git credentials 
+RUN git config --global credential.helper store && \
+    echo "https://${GITHUB_TOKEN}:x-oauth-basic@github.com" > ~/.git-credentials
 
-# 3. Corr submodule
-WORKDIR /build
-RUN git config --global credential.helper store \
-    && echo "https://${GITHUB_TOKEN}:x-oauth-basic@github.com" > ~/.git-credentials \
-    && git submodule sync \
-    && git submodule update --init --recursive \
-    && rm -rf ~/.git-credentials  # Nettoyage des credentials
+# 3. Clone principal repo
+RUN git clone --recursive https://${GITHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build || \
+    (cd /build && git submodule update --init --recursive)
 
 # Copy codebase (including submodules)
 COPY . /build/
