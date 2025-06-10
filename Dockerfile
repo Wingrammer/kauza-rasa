@@ -10,6 +10,8 @@ COPY . /build/
 # change working directory
 WORKDIR /build
 
+RUN git submodule update --init --recursive
+
 # install dependencies
 # RUN python -m venv /opt/venv && \
 #   . /opt/venv/bin/activate && \
