@@ -18,7 +18,7 @@ RUN git config --global url."https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com".in
 
 # Cloner le dépôt principal avec ses sous-modules
 RUN git clone --depth 1 --recurse-submodules \
-    https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com/${GITHUB_ORG}/${GITHUB_REPO}.git /build || \
+    https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build || \
     { echo "Échec du clonage principal"; exit 1; }
 
 WORKDIR /build
