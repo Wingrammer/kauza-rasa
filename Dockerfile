@@ -2,17 +2,18 @@
 ARG IMAGE_BASE_NAME
 ARG BASE_IMAGE_HASH
 ARG BASE_BUILDER_IMAGE_HASH
+ARG DOCKERHUB_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
-# copy files
-# Copy all files including .git (need to be in build context)
-COPY . /build/
-COPY .git /build/.git
+# Auth GitHub private modules
+RUN git config --global url."https://${DOCKERHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
 
+# Copy codebase (including submodules)
+COPY . /build/
 WORKDIR /build
 
-# Initialize submodules
+# Initialise submodules if needed
 RUN git submodule update --init --recursive
 
 # install dependencies
