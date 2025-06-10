@@ -2,7 +2,7 @@
 ARG IMAGE_BASE_NAME
 ARG BASE_IMAGE_HASH
 ARG BASE_BUILDER_IMAGE_HASH
-ARG GITHUB_TOKEN
+ARG KAUZA_DIALOG_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
@@ -13,13 +13,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Config git 
-RUN git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+RUN git config --global url."https://${KAUZA_DIALOG_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
 # Cloner le dépôt principal avec ses sous-modules
 ARG GITHUB_ORG=Wingrammer
 ARG GITHUB_REPO=kauza-dialogue
 
-RUN git clone --recursive https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${GITHUB_ORG}/${GITHUB_REPO}.git /build && \
+RUN git clone --recursive https://${KAUZA_DIALOG_TOKEN}:x-oauth-basic@github.com/${GITHUB_ORG}/${GITHUB_REPO}.git /build && \
     cd /build && \
     git submodule sync --recursive && \
     git submodule update --init --recursive --depth=1
