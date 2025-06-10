@@ -13,18 +13,20 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Config git 
-RUN git config --global url."https://${KAUZA_DIALOG_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+RUN git config --global url."https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com".insteadOf "https://github.com" && \
+    git config --global advice.detachedHead false
 
 # Cloner le dépôt principal avec ses sous-modules
-ARG GITHUB_ORG=Wingrammer
-ARG GITHUB_REPO=kauza-dialogue
-
-RUN git clone --recursive https://${KAUZA_DIALOG_TOKEN}:x-oauth-basic@github.com/${GITHUB_ORG}/${GITHUB_REPO}.git /build && \
-    cd /build && \
-    git submodule sync --recursive && \
-    git submodule update --init --recursive --depth=1
+RUN git clone --depth 1 --recurse-submodules \
+    https://oauth2:${KAUZA_DIALOG_TOKEN}@github.com/${GITHUB_ORG}/${GITHUB_REPO}.git /build || \
+    { echo "Échec du clonage principal"; exit 1; }
 
 WORKDIR /build
+
+# init submodule
+RUN git submodule sync && \
+    git submodule update --init --recursive --depth=1 || \
+    { echo "Échec des sous-modules"; git submodule status; exit 1; }
 
 # Initialise submodules if needed
 # RUN git submodule update --init --recursive
