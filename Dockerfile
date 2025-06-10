@@ -6,32 +6,27 @@ ARG GITHUB_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
-# Auth GitHub private modules
-RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+# 1. Install Git and clean up
+RUN apt-get update && \
+    apt-get install -y git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+# 2. Configure Git credentials securely
+RUN git config --global credential.helper 'cache --timeout=120' && \
+    git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
-RUN git clone https://${GITHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build \
-  && cd /build \
-  && git submodule update --init --recursive
+# 3. Clone main repository
+RUN git clone https://${GITHUB_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build && \
+    cd /build && \
+    git submodule sync && \
+    git submodule update --init --recursive --force
 
-
-# # 1. Install Git
-# RUN apt-get update && apt-get install -y git
-
-# # 2. Config Git credentials 
-# RUN git config --global credential.helper store && \
-#     echo "https://x-access-token:${GITHUB_TOKEN}@github.com" > ~/.git-credentials && \
-#     git config --global url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
-
-# # 3. Clone principal repo
-# RUN git clone --recursive https://github.com/Wingrammer/kauza-dialogue.git /build \
-#   && cd /build \
-#   && git submodule update --init --recursive
-
-
-# Copy codebase (including submodules)
-COPY . /build/
 WORKDIR /build
+
+# 4. Verify submodule configuration (debug)
+RUN git config --file=.gitmodules --list && \
+    git submodule status
 
 # Initialise submodules if needed
 # RUN git submodule update --init --recursive
