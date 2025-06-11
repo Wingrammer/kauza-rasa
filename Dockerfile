@@ -6,15 +6,17 @@ ARG KAUZA_DIALOG_TOKEN
 
 FROM ${IMAGE_BASE_NAME}:base-builder-${BASE_BUILDER_IMAGE_HASH} as builder
 
-# 1. Installation de Git
-RUN apt-get update && apt-get install -y git
+# # 1. Installation de Git
+# RUN apt-get update && apt-get install -y git
 
-# 2. Configuration sécurisée de Git
-RUN git config --global url."https://api:${KAUZA_DIALOG_TOKEN}@github.com/".insteadOf "https://github.com/"
+# # 2. Configuration sécurisée de Git
+# RUN git config --global url."https://api:${KAUZA_DIALOG_TOKEN}@github.com/".insteadOf "https://github.com/"
 
-# 3. Commande de clonage corrigée
-RUN git clone --depth 1 --recurse-submodules \
-    https://api:${KAUZA_DIALOG_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build
+# # 3. Commande de clonage corrigée
+# RUN git clone --depth 1 --recurse-submodules \
+#     https://api:${KAUZA_DIALOG_TOKEN}@github.com/Wingrammer/kauza-dialogue.git /build
+
+COPY . /build/
 
 WORKDIR /build
 
@@ -35,13 +37,6 @@ WORKDIR /build
 
 # WORKDIR /build
 
-# # init submodule
-# RUN git submodule sync && \
-#     git submodule update --init --recursive --depth=1 || \
-#     { echo "Échec des sous-modules"; git submodule status; exit 1; }
-
-# Initialise submodules if needed
-# RUN git submodule update --init --recursive
 
 # install dependencies
 # RUN python -m venv /opt/venv && \
