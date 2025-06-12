@@ -80,6 +80,27 @@ RUN rm -rf dist *.egg-info
 # start a new build stage
 FROM ${IMAGE_BASE_NAME}:base-${BASE_IMAGE_HASH} as runner
 
+# Install tools for .deb (ar, tar, curl)
+USER root
+RUN apt-get update && apt-get install -y \
+    curl \
+    binutils \
+    xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download and install 
+WORKDIR /tmp/mongo-lib
+RUN curl -O https://repo.mongodb.com/apt/ubuntu/dists/jammy/mongodb-enterprise/8.0/multiverse/binary-amd64/mongodb-enterprise-cryptd_8.0.10_amd64.deb \
+ && ar x mongodb-enterprise-cryptd_8.0.10_amd64.deb \
+ && tar -xf data.tar.xz
+
+# Copy and share
+RUN mkdir -p /usr/local/lib/mongo_crypt && \
+    cp usr/lib*/mongodb/crypt/shared/libmongocrypt.so /usr/local/lib/mongo_crypt/
+
+# Définir la variable d'environnement
+ENV SHARED_LIB_PATH=/usr/local/lib/mongo_crypt/libmongocrypt.so
+
 # copy everything from /opt
 COPY --from=builder /opt/venv /opt/venv
 
