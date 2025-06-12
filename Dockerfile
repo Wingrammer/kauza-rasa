@@ -96,9 +96,9 @@ RUN curl -O https://repo.mongodb.com/apt/ubuntu/dists/jammy/mongodb-enterprise/8
  && ar x mongodb-enterprise-cryptd_8.0.10_amd64.deb \
  && mkdir -p extract \
  && for f in data.tar.*; do tar -xf "$f" -C extract; done \
- && mkdir -p /usr/local/lib/mongo_crypt \
- && cp extract/usr/lib*/mongodb/crypt/shared/libmongocrypt.so /usr/local/lib/mongo_crypt/ \
- && rm -rf /tmp/mongo-lib
+ && find extract -name libmongocrypt.so -exec cp {} /usr/local/lib/mongo_crypt/ \;
+
+
 
 # Définir la variable d'environnement
 ENV SHARED_LIB_PATH=/usr/local/lib/mongo_crypt/libmongocrypt.so
