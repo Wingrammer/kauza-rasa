@@ -80,30 +80,21 @@ FROM ${IMAGE_BASE_NAME}:base-${BASE_IMAGE_HASH} as runner
 
 # Install tools for .deb (ar, tar, curl)
 USER root
+
+# Installer libmongocrypt depuis les dépôts MongoDB officiels
 RUN apt-get update && apt-get install -y \
     curl \
-    binutils \
-    xz-utils \
-    zstd \
+    gnupg \
+    ca-certificates \
+    lsb-release \
+    && curl -s https://pgp.mongodb.com/libmongocrypt.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/libmongocrypt.gpg \
+    && echo "deb [ arch=amd64 ] https://libmongocrypt.s3.amazonaws.com/apt/ubuntu $(lsb_release -cs)/libmongocrypt/1.13 universe" > /etc/apt/sources.list.d/libmongocrypt.list \
+    && apt-get update \
+    && apt-get install -y libmongocrypt-dev \
     && rm -rf /var/lib/apt/lists/*
 
-
-# Download and extract MongoDB crypt library
-WORKDIR /tmp/mongo-lib
-RUN curl -O https://repo.mongodb.com/apt/ubuntu/dists/jammy/mongodb-enterprise/8.0/multiverse/binary-amd64/mongodb-enterprise-cryptd_8.0.10_amd64.deb \
-  && ar x mongodb-enterprise-cryptd_8.0.10_amd64.deb \
-  && ls -l \
-  && mkdir -p extract \
-  && for f in data.tar.*; do tar -xf "$f" -C extract; done \
-  && ls -l extract \
-  && mkdir -p /usr/local/lib/mongo_crypt \
-  && find extract -name libmongocrypt.so -exec cp {} /usr/local/lib/mongo_crypt/ \; \
-  && find extract -name libmongocrypt.so -exec echo "Found: {}" \; \
-  && test -f /usr/local/lib/mongo_crypt/libmongocrypt.so
-
-
-# Définir la variable d'environnement
-ENV SHARED_LIB_PATH=/usr/local/lib/mongo_crypt/libmongocrypt.so
+# Définir la variable d’environnement attendue
+ENV SHARED_LIB_PATH=/usr/local/lib/libmongocrypt.so
 
 # copy everything from /opt
 COPY --from=builder /opt/venv /opt/venv
