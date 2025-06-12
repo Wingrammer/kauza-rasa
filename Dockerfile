@@ -75,8 +75,6 @@ RUN rm -rf dist *.egg-info
 #     && /opt/venv/bin/pip install --no-deps dist/*.whl \
 #     && rm -rf dist *.egg-info
 
-
-
 # start a new build stage
 FROM ${IMAGE_BASE_NAME}:base-${BASE_IMAGE_HASH} as runner
 
@@ -96,9 +94,8 @@ RUN curl -O https://repo.mongodb.com/apt/ubuntu/dists/jammy/mongodb-enterprise/8
  && ar x mongodb-enterprise-cryptd_8.0.10_amd64.deb \
  && mkdir -p extract \
  && for f in data.tar.*; do tar -xf "$f" -C extract; done \
- && find extract -name libmongocrypt.so -exec cp {} /usr/local/lib/mongo_crypt/ \;
-
-
+ && find extract -name libmongocrypt.so -exec cp {} /usr/local/lib/mongo_crypt/ \; \
+ && test -f /usr/local/lib/mongo_crypt/libmongocrypt.so
 
 # Définir la variable d'environnement
 ENV SHARED_LIB_PATH=/usr/local/lib/mongo_crypt/libmongocrypt.so
