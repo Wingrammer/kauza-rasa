@@ -86,7 +86,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     binutils \
     xz-utils \
+    zstd \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Download and extract MongoDB crypt library
 WORKDIR /tmp/mongo-lib
