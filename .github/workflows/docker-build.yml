@@ -31,7 +31,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: wingrammer/kauza:latest
+          tags: wingrammer/kauza:12-06-2025
           build-args: |
             IMAGE_BASE_NAME=wingrammer/kauza
             BASE_IMAGE_HASH=latest
