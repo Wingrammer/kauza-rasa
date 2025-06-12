@@ -95,9 +95,9 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /tmp/mongo-lib
 RUN curl -O https://downloads.mongodb.com/linux/mongo_crypt_shared_v1-linux-x86_64-enterprise-ubuntu2204-8.0.10.tgz \
   && tar -xzf mongo_crypt_shared_v1-linux-x86_64-enterprise-ubuntu2204-8.0.10.tgz \
-  && ls -lR ./mongo_crypt_shared_v1 \
-  && find ./mongo_crypt_shared_v1 -name mongo_crypt_v1.so \
-  && cp -v ./mongo_crypt_shared_v1/lib/mongo_crypt_v1.so /usr/lib/x86_64-linux-gnu/ \
+  && ls -lR lib \
+  && find lib -name mongo_crypt_v1.so \
+  && cp -v ./lib/mongo_crypt_v1.so /usr/lib/x86_64-linux-gnu/ \
   && test -f /usr/lib/x86_64-linux-gnu/mongo_crypt_v1.so \
   && rm -rf /tmp/mongo-lib
 
