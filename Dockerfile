@@ -94,7 +94,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Définir la variable d’environnement attendue
-ENV SHARED_LIB_PATH=/usr/local/lib/libmongocrypt.so
+# ENV SHARED_LIB_PATH=/usr/local/lib/libmongocrypt.so
+ENV SHARED_LIB_PATH=/usr/lib/x86_64-linux-gnu/libmongocrypt.so
+
 
 # copy everything from /opt
 COPY --from=builder /opt/venv /opt/venv
