@@ -83,6 +83,7 @@ FROM ${IMAGE_BASE_NAME}:base-${BASE_IMAGE_HASH} as runner
 # Install tools for .deb (ar, tar, curl)
 USER root
 
+# Installer les dépendances nécessaires
 RUN apt-get update && apt-get install -y \
   curl \
   binutils \
@@ -90,17 +91,18 @@ RUN apt-get update && apt-get install -y \
   zstd \
   && rm -rf /var/lib/apt/lists/*
 
-# Télécharger et extraire mongo_crypt_v1.so depuis l’archive .tgz
+# Télécharger et extraire mongo_crypt_v1.so depuis le .tgz
 WORKDIR /tmp/mongo-lib
 RUN curl -O https://downloads.mongodb.com/linux/mongo_crypt_shared_v1-linux-x86_64-enterprise-ubuntu2204-8.0.10.tgz \
   && tar -xzf mongo_crypt_shared_v1-linux-x86_64-enterprise-ubuntu2204-8.0.10.tgz \
-  && cp -v ./mongo_crypt_shared/lib/mongo_crypt_v1.so /usr/lib/x86_64-linux-gnu/ \
+  && ls -lR ./mongo_crypt_shared_v1 \
+  && find ./mongo_crypt_shared_v1 -name mongo_crypt_v1.so \
+  && cp -v ./mongo_crypt_shared_v1/lib/mongo_crypt_v1.so /usr/lib/x86_64-linux-gnu/ \
   && test -f /usr/lib/x86_64-linux-gnu/mongo_crypt_v1.so \
   && rm -rf /tmp/mongo-lib
 
 # Définir le chemin vers la librairie dynamique
 ENV SHARED_LIB_PATH=/usr/lib/x86_64-linux-gnu/mongo_crypt_v1.so
-
 
 
 # copy everything from /opt
