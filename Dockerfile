@@ -91,13 +91,15 @@ RUN apt-get update && apt-get install -y \
 # Download and extract MongoDB crypt library
 WORKDIR /tmp/mongo-lib
 RUN curl -O https://repo.mongodb.com/apt/ubuntu/dists/jammy/mongodb-enterprise/8.0/multiverse/binary-amd64/mongodb-enterprise-cryptd_8.0.10_amd64.deb \
- && ar x mongodb-enterprise-cryptd_8.0.10_amd64.deb \
- && mkdir -p extract \
- && for f in data.tar.*; do tar -xf "$f" -C extract; done \
- && mkdir -p /usr/local/lib/mongo_crypt \
- && find extract -name libmongocrypt.so -exec cp {} /usr/local/lib/mongo_crypt/ \; \
- && find extract -name libmongocrypt.so -exec echo "Found: {}" \; \
- && test -f /usr/local/lib/mongo_crypt/libmongocrypt.so
+  && ar x mongodb-enterprise-cryptd_8.0.10_amd64.deb \
+  && ls -l \
+  && mkdir -p extract \
+  && for f in data.tar.*; do tar -xf "$f" -C extract; done \
+  && ls -l extract \
+  && mkdir -p /usr/local/lib/mongo_crypt \
+  && find extract -name libmongocrypt.so -exec cp {} /usr/local/lib/mongo_crypt/ \; \
+  && find extract -name libmongocrypt.so -exec echo "Found: {}" \; \
+  && test -f /usr/local/lib/mongo_crypt/libmongocrypt.so
 
 
 # Définir la variable d'environnement
