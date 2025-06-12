@@ -75,28 +75,32 @@ RUN rm -rf dist *.egg-info
 #     && /opt/venv/bin/pip install --no-deps dist/*.whl \
 #     && rm -rf dist *.egg-info
 
+
+
 # start a new build stage
 FROM ${IMAGE_BASE_NAME}:base-${BASE_IMAGE_HASH} as runner
 
 # Install tools for .deb (ar, tar, curl)
 USER root
-
-# Installer libmongocrypt depuis les dépôts MongoDB officiels
 RUN apt-get update && apt-get install -y \
-    curl \
-    gnupg \
-    ca-certificates \
-    lsb-release \
-    && curl -s https://pgp.mongodb.com/libmongocrypt.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/libmongocrypt.gpg \
-    && echo "deb [ arch=amd64 ] https://libmongocrypt.s3.amazonaws.com/apt/ubuntu $(lsb_release -cs)/libmongocrypt/1.13 universe" > /etc/apt/sources.list.d/libmongocrypt.list \
-    && apt-get update \
-    && apt-get install -y libmongocrypt-dev \
-    && rm -rf /var/lib/apt/lists/*
+  curl \
+  binutils \
+  xz-utils \
+  zstd \
+  && rm -rf /var/lib/apt/lists/*
 
-# Définir la variable d’environnement attendue
-# ENV SHARED_LIB_PATH=/usr/local/lib/libmongocrypt.so
-ENV SHARED_LIB_PATH=/usr/lib/x86_64-linux-gnu/libmongocrypt.so
+# Télécharger et extraire mongo_crypt_v1.so depuis le .deb
+WORKDIR /tmp/mongo-lib
+RUN curl -O https://repo.mongodb.com/apt/ubuntu/dists/jammy/mongodb-enterprise/8.0/multiverse/binary-amd64/mongodb-enterprise-cryptd_8.0.10_amd64.deb \
+  && ar x mongodb-enterprise-cryptd_8.0.10_amd64.deb \
+  && mkdir -p extract \
+  && for f in data.tar.*; do tar -xf "$f" -C extract; done \
+  && find extract -name mongo_crypt_v1.so -exec cp {} /usr/lib/x86_64-linux-gnu/ \
+  && test -f /usr/lib/x86_64-linux-gnu/mongo_crypt_v1.so;
 
+
+# Définir le chemin vers la librairie dynamique
+ENV SHARED_LIB_PATH=/usr/lib/x86_64-linux-gnu/mongo_crypt_v1.so
 
 # copy everything from /opt
 COPY --from=builder /opt/venv /opt/venv
