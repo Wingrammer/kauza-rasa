@@ -5,6 +5,7 @@ aioredis
 pymemcache
 jsonpath_ng
 uncurl
+pymongo==4.3.3
 pymongocrypt
 pymongo==4.4.0
 typing_extensions==4.12.2
