@@ -31,8 +31,11 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: wingrammer/kauza:13-06-2025-01
+          tags: wingrammer/kauza:17-06-2025-latest
           build-args: |
             IMAGE_BASE_NAME=wingrammer/kauza
             BASE_IMAGE_HASH=latest
             BASE_BUILDER_IMAGE_HASH=latest-poetry-1.8.4
+            AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
+            AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
+            AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
