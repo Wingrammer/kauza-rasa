@@ -31,7 +31,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: wingrammer/kauza:17-06-2025-latest
+          tags: wingrammer/kauza:18-06-2025-latest
           build-args: |
             IMAGE_BASE_NAME=wingrammer/kauza
             BASE_IMAGE_HASH=latest
@@ -39,3 +39,5 @@ jobs:
             AZURE_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}
             AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}
             AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}
+            AZURE_KEY_VAULT_ENDPOINT=${{ secrets.AZURE_KEY_VAULT_ENDPOINT }}
+            AZURE_KEY_NAME=${{ secrets.AZURE_KEY_NAME }}
